@@ -14,7 +14,7 @@ using System.IO;
 namespace RevitAddinAcademy
 {
     [Transaction(TransactionMode.Manual)]
-    public class Command01 : IExternalCommand
+    public class Command01Challenge : IExternalCommand
     {
         public Result Execute(
           ExternalCommandData commandData,
@@ -27,10 +27,15 @@ namespace RevitAddinAcademy
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            string text = "Revit Add-in Academy";
+            string textFizz = "FIZZ";
+            string textBuzz = "BUZZ";
+            string textBoth = "FIZZBUZZ";
+            string curString = "";
+
+
             string fileName = doc.PathName;
 
-            double offset = 0.05; //base unit of current model  so feet
+            double offset = 0.05; //base unit of current model  so that is feet
             double offsetCalc = offset * doc.ActiveView.Scale;
 
 
@@ -46,7 +51,24 @@ namespace RevitAddinAcademy
             int range = 100;
             for (int i = 1; i <= range; i++)
             {
-                TextNote curNote = TextNote.Create(doc, doc.ActiveView.Id, curPoint, "This is Line " + i.ToString(), collector.FirstElementId());
+                if( ((i%3)==0) && ((i%5)==0))
+                {
+                    curString = textBoth;
+                }
+                else if ((i % 3) == 0)
+                {
+                    curString = textFizz;
+                }
+                else if ((i % 5) == 0)
+                {
+                    curString = textBuzz;
+                }
+                else
+                {
+                    curString = i.ToString();
+                }
+                //TextNote curNote = TextNote.Create(doc, doc.ActiveView.Id, curPoint, "            This is Line " + i.ToString(), collector.FirstElementId());
+                TextNote curNote2 = TextNote.Create(doc, doc.ActiveView.Id, curPoint, curString, collector.FirstElementId());
                 curPoint = curPoint.Subtract(offsetPoint);
             }
 
@@ -56,11 +78,5 @@ namespace RevitAddinAcademy
             return Result.Succeeded;
         }
 
-        internal double Method01(double a, double b)
-        {
-            double c = a + b;
-            Debug.Print("Got here: " + c.ToString());
-            return c;
-        }
     }
 }

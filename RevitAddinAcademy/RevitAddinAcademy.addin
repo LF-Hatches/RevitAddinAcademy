@@ -18,6 +18,15 @@
 		<VendorId>com.typepad.thebuildingcoder</VendorId>
 		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
 	</AddIn>
+	<AddIn Type="Command">
+		<Text>Command 01 Challenge</Text>
+		<Description>Some description for RevitAddinAcademy</Description>
+		<Assembly>RevitAddinAcademy.dll</Assembly>
+		<FullClassName>RevitAddinAcademy.Command01Challenge</FullClassName>
+		<ClientId>942E16BB-BFBD-4E7C-A943-BDD3F7E6DB30</ClientId>
+		<VendorId>com.typepad.thebuildingcoder</VendorId>
+		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+	</AddIn>
   <AddIn Type="Application">
     <Name>Application RevitAddinAcademy</Name>
     <Assembly>RevitAddinAcademy.dll</Assembly>
