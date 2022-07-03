@@ -21,59 +21,37 @@ namespace RevitAddinAcademy
           ref string message,
           ElementSet elements)
         {
-            int range = 100;
 
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            TaskDialog.Show("Hello", "This is Command 01");
-
-            int number = 1;
-            double number2 = 10.5;
             string text = "Reit Add-in Academy";
-            XYZ point = new XYZ(0, 0, 0);
-            XYZ point2 = new XYZ(0, 0, 0);
+            string fileName = doc.PathName;
+
+            double offset = 0.05; //base unit of current model  so feet
+            double offsetCalc = offset * doc.ActiveView.Scale;
 
 
-            double math = number * number2 + 100;
-            double math2 = math % number2;
+            XYZ curPoint = new XYZ(0, 0, 0);
+            XYZ offsetPoint = new XYZ(0, offsetCalc, 0);
+            
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(TextNoteType));
 
-            List<string> strings = new List<string>();
-            strings.Add("item 1");
-            strings.Add("item 2");
+            Transaction t = new Transaction(doc, "Create Text Note"); //what appears in the undo
+            t.Start();
 
-            List<XYZ> points = new List<XYZ>();
-            points.Add(point);
-            points.Add(point2);
-
-
-
-            for (int i = 1; i<range; i++)
+            int range = 100;
+            for (int i = 1; i < range; i++)
             {
-                number = number + 1;
+                TextNote curNote = TextNote.Create(doc, doc.ActiveView.Id, curPoint, "This is Line " + i.ToString(), collector.FirstElementId());
+                curPoint = curPoint.Subtract(offsetPoint);
             }
 
-            string newString = "";
-            foreach(string s in strings)
-            {
-                if(s == "item 1")
-                {
-                    newString = "got to 1";
-                }
-                else if(s == "item 2")
-                {
-                    newString = "got to 2";
-                }
-                else 
-                {
-                    newString = "Got somewhere else";
-                }
-                newString = newString + s;
-            }
-
-            double newNumber = Method01(100, 100);
+            t.Commit();
+            t.Dispose();
 
             return Result.Succeeded;
         }
