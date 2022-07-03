@@ -44,7 +44,7 @@ namespace RevitAddinAcademy
             t.Start();
 
             int range = 100;
-            for (int i = 1; i < range; i++)
+            for (int i = 1; i <= range; i++)
             {
                 TextNote curNote = TextNote.Create(doc, doc.ActiveView.Id, curPoint, "This is Line " + i.ToString(), collector.FirstElementId());
                 curPoint = curPoint.Subtract(offsetPoint);
