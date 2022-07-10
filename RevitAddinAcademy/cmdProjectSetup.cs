@@ -32,8 +32,9 @@ namespace RevitAddinAcademy
             Excel.Application excelApp = new Excel.Application();        //Open Application Excel
             Excel.Workbook excelWb = excelApp.Workbooks.Open(excelFile); //Workbook File
             NumWBSheets = excelWb.Sheets.Count;             //Number of sheets to loop through
-
+            //initialize jagged array or array of arrays? Data check.
             List<string[]> dataList = new List<string[]>(); //Collection of string arrays outside loop
+            //List<string[dataList]> dataMultiList = new List<string[NumWBSheets]>(); //Collection of string arrays outside loop
 
             //Get all data first. Then do revit actions.
             //Levels live on sheet 1 - index 1; Sheets live in 2.
@@ -57,7 +58,8 @@ namespace RevitAddinAcademy
                     string[] dataArray = new string[2];      //two elements in array
                     dataArray[0] = data1;
                     dataArray[1] = data2;
-                    dataList.Add(dataArray);
+                    dataMultiList[i][j].Add(dataArray); //MultiList adding
+                    //dataList.Add(dataArray);
                     Debug.Print("Data 1: " + data1.ToString());  //Check-in
                     Debug.Print("Data 2: " + data2.ToString());  //Check-in
                 }
@@ -66,26 +68,33 @@ namespace RevitAddinAcademy
 
 
             //Do Revit Actions
-            //Check for which data has what type
-            //If sheet, add sheet
-            //If level, add level
+            //Check for which data type
+            //when function type = sheet, run add sheet
+            //else function type = level, run add level
 
 
             using (Transaction t = new Transaction(doc))
             {
                 t.Start("Create some Revit stuff"); //Start transaction
+                //Loop through making levels - make method later
+                //for(int i=0; i<)
+
                 Level curLevel = Level.Create(doc, 100);     //create level - default imperial feet
+
+                //Loop through making sheets - make method later
+
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_TitleBlocks); //get Titleblock Type Category
                 collector.WhereElementIsElementType();  //Types of titleblock types
                 ViewSheet curSheet = ViewSheet.Create(doc, collector.FirstElementId()); //uses first type of titleblock kind
- /*  Build in Error Checking Procedures for sheets, for levels
+ 
+            /*  Build in Error Checking Procedures for sheets & levels
                 //check for if placeholder - overwrite or leave
                 //check for if sheet number exists already - get list of current sheets in doc
                 //loop through current sheet numbers to check
                 //if placeholder, delete placeholder and make new sheet
                 //if not placeholder - skip entry?
- */
+            */
  
                 curSheet.SheetNumber = "A101010"; //Directly exposed elements. Checker checkedby etc not avail.
                 curSheet.Name = "New Sheet";
