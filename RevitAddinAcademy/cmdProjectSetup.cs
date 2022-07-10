@@ -6,6 +6,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using System;
 using System.Collections.Generic;
+using System.Collections;           //ArrayList, toChar and toInt
 using System.Diagnostics;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -32,21 +33,23 @@ namespace RevitAddinAcademy
             Excel.Application excelApp = new Excel.Application();        //Open Application Excel
             Excel.Workbook excelWb = excelApp.Workbooks.Open(excelFile); //Workbook File
             NumWBSheets = excelWb.Sheets.Count;             //Number of sheets to loop through
-            //initialize jagged array or array of arrays? Data check.
+            //initialize ArrayList 
+            List<List<string[]>> dataMultiList = new List<List<string[]>>(); //Collection of Lists outside loop
             List<string[]> dataList = new List<string[]>(); //Collection of string arrays outside loop
-            //List<string[dataList]> dataMultiList = new List<string[NumWBSheets]>(); //Collection of string arrays outside loop
 
             //Get all data first. Then do revit actions.
             //Levels live on sheet 1 - index 1; Sheets live in 2.
             for (int i=1; i<=NumWBSheets; i++) //Loop through all WB sheets
             {
+                //Make ReadExcel Method later
+                //Read Excel - Transforming Rows and Columns to List of Arrays
+                //returns List type, takes Excel name, Range 
+
                 //Workbook Sheet - First sheet is 1 not 0
                 Excel.Worksheet excelWs = excelWb.Worksheets.Item[i];   //linked to loop     
                 Excel.Range excelRng = excelWs.UsedRange;
                 int rowCount = excelRng.Rows.Count;
 
-                //Make method of ReadExcel later
-                //Read Excel - Transforming Rows and Columns to List of Arrays
                 for (int j = 1; j <= rowCount; j++)
                 {
                     Excel.Range cell1 = excelWs.Cells[j, 1]; //First cell of first column
@@ -58,14 +61,12 @@ namespace RevitAddinAcademy
                     string[] dataArray = new string[2];      //two elements in array
                     dataArray[0] = data1;
                     dataArray[1] = data2;
-                    dataMultiList[i][j].Add(dataArray); //MultiList adding
-                    //dataList.Add(dataArray);
+                    dataList.Add(dataArray); 
                     Debug.Print("Data 1: " + data1.ToString());  //Check-in
                     Debug.Print("Data 2: " + data2.ToString());  //Check-in
                 }
-
+                dataMultiList.Add(dataList);    //List from WB
             }
-
 
             //Do Revit Actions
             //Check for which data type
@@ -75,29 +76,58 @@ namespace RevitAddinAcademy
 
             using (Transaction t = new Transaction(doc))
             {
-                t.Start("Create some Revit stuff"); //Start transaction
-                //Loop through making levels - make method later
-                //for(int i=0; i<)
+                t.Start("Sheet and View Setup from Excel"); //Start transaction
 
-                Level curLevel = Level.Create(doc, 100);     //create level - default imperial feet
-
-                //Loop through making sheets - make method later
-
+                //Access Level List in dataMultiList
+                bool doLevels = true; //Start with Levels
+                //Setup Titleblock type
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_TitleBlocks); //get Titleblock Type Category
                 collector.WhereElementIsElementType();  //Types of titleblock types
-                ViewSheet curSheet = ViewSheet.Create(doc, collector.FirstElementId()); //uses first type of titleblock kind
- 
-            /*  Build in Error Checking Procedures for sheets & levels
-                //check for if placeholder - overwrite or leave
-                //check for if sheet number exists already - get list of current sheets in doc
-                //loop through current sheet numbers to check
-                //if placeholder, delete placeholder and make new sheet
-                //if not placeholder - skip entry?
-            */
- 
-                curSheet.SheetNumber = "A101010"; //Directly exposed elements. Checker checkedby etc not avail.
-                curSheet.Name = "New Sheet";
+
+                //Delete header rows or skip them?
+                bool firstLine = true;
+
+                 //Loop through making levels - make method later
+                foreach (var subList in dataMultiList)
+                {
+                    foreach (var value in subList)
+                    {
+                        if (firstLine)
+                        {
+                            //Do nothing and set first line to zero
+                            firstLine = false;
+                        }
+                        else if(doLevels) //make Levels
+                        {
+                            string strData1 = Convert.ToString(value[0]); //Level Name
+                            double numData1 = Convert.ToDouble(value[1]); //Level Height
+
+                            Level curLevel = Level.Create(doc, numData1);     //create level - default imperial feet
+                            if(null == curLevel)
+                            {
+                                throw new Exception("Create new level failed. ");
+                            }
+                            curLevel.Name = strData1;
+                        }
+                        else //make Sheets
+                        {
+                            string strData1 = value[0].ToString();  //Sheet Number
+                            string strData2 = value[1].ToString();  //Sheet Name
+
+                            ViewSheet curSheet = ViewSheet.Create(doc, collector.FirstElementId()); //uses first type of titleblock kind
+                            if (null == curSheet)
+                            {
+                                throw new Exception("Create new sheet failed. ");
+                            }
+                            curSheet.SheetNumber = strData1;       
+                            curSheet.Name = strData2;       
+                        }
+                    }
+                    firstLine = true; //reset for header row
+                    doLevels = false; //reset for sheets going forward
+                }
+
 
                 t.Commit(); //Commit Transaction
             }
