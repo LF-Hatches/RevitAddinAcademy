@@ -26,17 +26,18 @@ namespace RevitAddinAcademy
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            string excelFile = @"Session02_Challenge-220706-113155.xlsx"; //pointed to new file
-            int NumWBSheets = 0;
+            string excelFile = @"C:\Users\LFarrell\Desktop\Revit Add-in Academy\Class Week 2\Session02_Challenge-220706-113155.xlsx"; //pointed to new file
+            int NumWBSheets = 0; //HArdwired
 
             Excel.Application excelApp = new Excel.Application();        //Open Application Excel
             Excel.Workbook excelWb = excelApp.Workbooks.Open(excelFile); //Workbook File
             NumWBSheets = excelWb.Sheets.Count;             //Number of sheets to loop through
+
             List<string[]> dataList = new List<string[]>(); //Collection of string arrays outside loop
 
             //Get all data first. Then do revit actions.
             //Levels live on sheet 1 - index 1; Sheets live in 2.
-            for (int i=0; i<NumWBSheets; i++) //Loop through all WB sheets
+            for (int i=1; i<=NumWBSheets; i++) //Loop through all WB sheets
             {
                 //Workbook Sheet - First sheet is 1 not 0
                 Excel.Worksheet excelWs = excelWb.Worksheets.Item[i];   //linked to loop     
