@@ -35,7 +35,6 @@ namespace RevitAddinAcademy
             NumWBSheets = excelWb.Sheets.Count;             //Number of sheets to loop through
             //initialize ArrayList 
             List<List<string[]>> dataMultiList = new List<List<string[]>>(); //Collection of Lists outside loop
-            List<string[]> dataList = new List<string[]>(); //Collection of string arrays outside loop
 
             //Get all data first. Then do revit actions.
             //Levels live on sheet 1 - index 1; Sheets live in 2.
@@ -49,6 +48,7 @@ namespace RevitAddinAcademy
                 Excel.Worksheet excelWs = excelWb.Worksheets.Item[i];   //linked to loop     
                 Excel.Range excelRng = excelWs.UsedRange;
                 int rowCount = excelRng.Rows.Count;
+                List<string[]> dataList = new List<string[]>(); //Collection of string arrays inside loop
 
                 for (int j = 1; j <= rowCount; j++)
                 {
@@ -88,14 +88,26 @@ namespace RevitAddinAcademy
                 //Delete header rows or skip them?
                 bool firstLine = true;
 
-                 //Loop through making levels - make method later
-                foreach (var subList in dataMultiList)
+                //Loop through making levels - make method later
+                //foreach (var subList in dataMultiList) //changing this to a for loop
+                for(int i=0; i< dataMultiList.Count-1; i++)
                 {
-                    foreach (var value in subList)
+                    List<string[]> subList = dataMultiList[i]; //List copy
+                     //foreach (var value in subList) //changing this to a for loop
+                    for (int j=0; j< subList.Count-1; j++) //check if needs equals
                     {
+                        string[] value = subList[j]; 
                         if (firstLine)
                         {
                             //Do nothing and set first line to zero
+                            if (value[0] == "Level Name")
+                            {
+                                doLevels = true; //set for levels going forward
+                            }
+                            else
+                            {
+                                doLevels = false; //set to sheets
+                            }
                             firstLine = false;
                         }
                         else if(doLevels) //make Levels
@@ -110,8 +122,10 @@ namespace RevitAddinAcademy
                             }
                             curLevel.Name = strData1;
                         }
-                        else //make Sheets
+                        else if(!doLevels) //make Sheets
                         {
+                          /*
+                            //element collector check against all existing names
                             string strData1 = value[0].ToString();  //Sheet Number
                             string strData2 = value[1].ToString();  //Sheet Name
 
@@ -122,13 +136,12 @@ namespace RevitAddinAcademy
                             }
                             curSheet.SheetNumber = strData1;       
                             curSheet.Name = strData2;       
+                          */
                         }
                     }
+                    doLevels = false; //set default back to false
                     firstLine = true; //reset for header row
-                    doLevels = false; //reset for sheets going forward
                 }
-
-
                 t.Commit(); //Commit Transaction
             }
 
