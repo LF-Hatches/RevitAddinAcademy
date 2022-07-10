@@ -28,24 +28,20 @@ namespace RevitAddinAcademy
             Document doc = uidoc.Document;
 
             string excelFile = @"C:\Users\LFarrell\Desktop\Revit Add-in Academy\Class Week 2\Session02_Challenge-220706-113155.xlsx"; //pointed to new file
-            int NumWBSheets = 0; //HArdwired
 
             Excel.Application excelApp = new Excel.Application();        //Open Application Excel
             Excel.Workbook excelWb = excelApp.Workbooks.Open(excelFile); //Workbook File
-            NumWBSheets = excelWb.Sheets.Count;             //Number of sheets to loop through
-            //initialize ArrayList 
+            int NumWBSheets = excelWb.Sheets.Count;                      //Number of sheets to loop through
             List<List<string[]>> dataMultiList = new List<List<string[]>>(); //Collection of Lists outside loop
 
             //Get all data first. Then do revit actions.
-            //Levels live on sheet 1 - index 1; Sheets live in 2.
             for (int i=1; i<=NumWBSheets; i++) //Loop through all WB sheets
             {
-                //Make ReadExcel Method later
                 //Read Excel - Transforming Rows and Columns to List of Arrays
-                //returns List type, takes Excel name, Range 
+                //Make ReadExcel Method later  //returns List type, takes Excel name, Range 
 
                 //Workbook Sheet - First sheet is 1 not 0
-                Excel.Worksheet excelWs = excelWb.Worksheets.Item[i];   //linked to loop     
+                Excel.Worksheet excelWs = excelWb.Worksheets.Item[i];    
                 Excel.Range excelRng = excelWs.UsedRange;
                 int rowCount = excelRng.Rows.Count;
                 List<string[]> dataList = new List<string[]>(); //Collection of string arrays inside loop
@@ -61,45 +57,33 @@ namespace RevitAddinAcademy
                     string[] dataArray = new string[2];      //two elements in array
                     dataArray[0] = data1;
                     dataArray[1] = data2;
-                    dataList.Add(dataArray); 
-                    Debug.Print("Data 1: " + data1.ToString());  //Check-in
-                    Debug.Print("Data 2: " + data2.ToString());  //Check-in
+                    dataList.Add(dataArray);                 //Debug.Print("Data 1: " + data1.ToString());  //Check-in
                 }
-                dataMultiList.Add(dataList);    //List from WB
+                dataMultiList.Add(dataList);                 //Add WBList to MultiList
             }
 
             //Do Revit Actions
-            //Check for which data type
-            //when function type = sheet, run add sheet
-            //else function type = level, run add level
-
 
             using (Transaction t = new Transaction(doc))
             {
                 t.Start("Sheet and View Setup from Excel"); //Start transaction
+                bool doLevels = true;  //Start with Levels
+                bool firstLine = true; //For skipping header rows
 
-                //Access Level List in dataMultiList
-                bool doLevels = true; //Start with Levels
                 //Setup Titleblock type
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_TitleBlocks); //get Titleblock Type Category
                 collector.WhereElementIsElementType();  //Types of titleblock types
 
-                //Delete header rows or skip them?
-                bool firstLine = true;
-
-                //Loop through making levels - make method later
-                //foreach (var subList in dataMultiList) //changing this to a for loop
-                for(int i=0; i< dataMultiList.Count-1; i++)
+                for(int i=1; i<=dataMultiList.Count; i++)
                 {
-                    List<string[]> subList = dataMultiList[i]; //List copy
-                     //foreach (var value in subList) //changing this to a for loop
-                    for (int j=0; j< subList.Count-1; j++) //check if needs equals
+                    List<string[]> subList = dataMultiList[i-1]; //List copy
+                    for (int j=1; j<=subList.Count; j++) 
                     {
-                        string[] value = subList[j]; 
+                        string[] value = subList[j-1]; 
                         if (firstLine)
                         {
-                            //Do nothing and set first line to zero
+                            //Skip header and set firstLine to false
                             if (value[0] == "Level Name")
                             {
                                 doLevels = true; //set for levels going forward
@@ -110,33 +94,38 @@ namespace RevitAddinAcademy
                             }
                             firstLine = false;
                         }
-                        else if(doLevels) //make Levels
+                        else
                         {
-                            string strData1 = Convert.ToString(value[0]); //Level Name
-                            double numData1 = Convert.ToDouble(value[1]); //Level Height
-
-                            Level curLevel = Level.Create(doc, numData1);     //create level - default imperial feet
-                            if(null == curLevel)
+                            if (doLevels) //make Levels
                             {
-                                throw new Exception("Create new level failed. ");
-                            }
-                            curLevel.Name = strData1;
-                        }
-                        else if(!doLevels) //make Sheets
-                        {
-                          /*
-                            //element collector check against all existing names
-                            string strData1 = value[0].ToString();  //Sheet Number
-                            string strData2 = value[1].ToString();  //Sheet Name
+                                string strData1 = Convert.ToString(value[0]); //Level Name
+                                double numData1 = Convert.ToDouble(value[1]); //Level Height
 
-                            ViewSheet curSheet = ViewSheet.Create(doc, collector.FirstElementId()); //uses first type of titleblock kind
-                            if (null == curSheet)
-                            {
-                                throw new Exception("Create new sheet failed. ");
+                                Level curLevel = Level.Create(doc, numData1);     //create level - default imperial feet
+                                /*
+                                if (null == curLevel)
+                                {
+                                    throw new Exception("Create new level failed. ");
+                                }
+                                */
+                                curLevel.Name = strData1;
                             }
-                            curSheet.SheetNumber = strData1;       
-                            curSheet.Name = strData2;       
-                          */
+                            if (!doLevels) //make Sheets
+                            {
+                                /*
+                                  //element collector check against all existing names
+                                  string strData1 = value[0].ToString();  //Sheet Number
+                                  string strData2 = value[1].ToString();  //Sheet Name
+
+                                  ViewSheet curSheet = ViewSheet.Create(doc, collector.FirstElementId()); //uses first type of titleblock kind
+                                  if (null == curSheet)
+                                  {
+                                      throw new Exception("Create new sheet failed. ");
+                                  }
+                                  curSheet.SheetNumber = strData1;       
+                                  curSheet.Name = strData2;       
+                                */
+                            }
                         }
                     }
                     doLevels = false; //set default back to false
