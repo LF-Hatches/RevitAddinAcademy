@@ -67,14 +67,15 @@ namespace RevitAddinAcademy
             using (Transaction t = new Transaction(doc))
             {
                 t.Start("Sheet and View Setup from Excel"); //Start transaction
-                //bool doLevels = true;  //Start with Levels
-                //bool firstLine = true; //For skipping header rows
+                bool doLevels = true;  //Start with Levels
+                bool firstLine = true; //For skipping header rows
 
                 //Setup Titleblock type
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_TitleBlocks); //get Titleblock Type Category
                 collector.WhereElementIsElementType();  //Types of titleblock types
                 
+                /*
                 //FOR LEVELS
                 List<string[]> subListLevels = dataMultiList[0]; //List copy
                 int count1 = subListLevels.Count;
@@ -99,13 +100,13 @@ namespace RevitAddinAcademy
                     curSheet.SheetNumber = strData1;
                     curSheet.Name = strData2;
                 }
-
-                /* so many errors... =(
+                */
+                /* so many errors... =( */
                 //for(int i=1; i<=dataMultiList.Count; i++)
                 for (int i = 1; i<=2; i++) //alt hardcoding it
                 {
                     List<string[]> subList = dataMultiList[i-1]; //List copy
-                    for (int j=1; j<subList.Count; j++)  //having range errors so reduced list count
+                    for (int j=1; j<subList.Count; j++)
                     {
                         string[] value = subList[j-1]; 
                         if (firstLine)
@@ -125,10 +126,9 @@ namespace RevitAddinAcademy
                         {
                             if (doLevels) //make Levels
                             {
-                                string strData1 = Convert.ToString(value[0]); //Level Name
-                                //double numData1 = Convert.ToDouble(value[1]); //Level Height
+                                string strData1 = Convert.ToString(value[0]); //Level Name                                
                                 double numData1 = Double.Parse(value[1]);     //Level Height
-
+                               
                                 Level curLevel = Level.Create(doc, numData1);     //create level - default imperial feet
                                 if (curLevel == null)
                                 {
@@ -152,10 +152,10 @@ namespace RevitAddinAcademy
                             }
                         }
                     }
-                    //doLevels = false; //set default back to false
-                    //firstLine = true; //reset for header row
+                    doLevels = false; //set default back to false
+                    firstLine = true; //reset for header row
                 }
-                */
+                
                 t.Commit(); //Commit Transaction
             }
 
