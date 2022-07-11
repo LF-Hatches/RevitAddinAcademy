@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RevitAddinAcademy")]
-[assembly: AssemblyDescription("Revit Add-In Description for RevitAddinAcademy")]
+[assembly: AssemblyDescription("Session02 Challenge")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Autodesk Inc.")]
+[assembly: AssemblyCompany("NautoDesk")]
 [assembly: AssemblyProduct("RevitAddinAcademy Revit C# .NET Add-In")]
-[assembly: AssemblyCopyright("Copyright (C) 2020 by Jeremy Tammik, Autodesk Inc.")]
+[assembly: AssemblyCopyright("Copyright (C) 2022 by LF")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("321044f7-b0b2-4b1c-af18-e71a19252be0")]
+[assembly: Guid("8BF20583-CB20-40E4-81B5-316FE692A775")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -27,7 +27,7 @@ namespace RevitAddinAcademy
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            string excelFile = @"C:\Users\LFarrell\Desktop\Revit Add-in Academy\Class Week 2\Session02_Challenge-220706-113155.xlsx"; //pointed to new file
+            string excelFile = @"C:\Users\LFarrell\Desktop\Revit Add-in Academy\Class Week 2\Session02_Challenge-220706-NoRoof.xlsx"; //pointed to new file
 
             Excel.Application excelApp = new Excel.Application();        //Open Application Excel
             Excel.Workbook excelWb = excelApp.Workbooks.Open(excelFile); //Workbook File
@@ -52,7 +52,7 @@ namespace RevitAddinAcademy
                     Excel.Range cell2 = excelWs.Cells[j, 2]; //First cell of second column
 
                     string data1 = cell1.Value.ToString();
-                    string data2 = cell2.Value.ToString();
+                    string data2 = cell2.Value.ToString();   //This makes ALL THE DATA Strings ****** conversion on the back end to doubles
 
                     string[] dataArray = new string[2];      //two elements in array
                     dataArray[0] = data1;
@@ -74,7 +74,7 @@ namespace RevitAddinAcademy
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_TitleBlocks); //get Titleblock Type Category
                 collector.WhereElementIsElementType();  //Types of titleblock types
-
+                
                 //FOR LEVELS
                 List<string[]> subListLevels = dataMultiList[0]; //List copy
                 int count1 = subListLevels.Count;
@@ -82,12 +82,11 @@ namespace RevitAddinAcademy
                 {
                     //LEVELS
                     string strData1 = Convert.ToString(subListLevels[i][0]); //Level Name
-                    string strData2 = Convert.ToString(subListLevels[i][1]); //Level Height
-                    double numData1 = Convert.ToDouble(strData2);     //Level Height
+                    double numData1 = Double.Parse(subListLevels[i][1]);
                     Level curLevel = Level.Create(doc, numData1); //create level - default imperial feet
                     curLevel.Name = strData1;
                 }
-                Debug.Print("Did not make it here.");
+                
                 //FOR SHEETS
                 List<string[]> subListSheets = dataMultiList[1]; //List copy
                 int count2 = subListSheets.Count;
