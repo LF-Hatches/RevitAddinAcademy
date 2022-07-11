@@ -74,7 +74,7 @@ namespace RevitAddinAcademy
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_TitleBlocks); //get Titleblock Type Category
                 collector.WhereElementIsElementType();  //Types of titleblock types
-                
+
                 /*
                 //FOR LEVELS
                 List<string[]> subListLevels = dataMultiList[0]; //List copy
@@ -102,8 +102,8 @@ namespace RevitAddinAcademy
                 }
                 */
                 /* so many errors... =( */
-                //for(int i=1; i<=dataMultiList.Count; i++)
-                for (int i = 1; i<=2; i++) //alt hardcoding it
+                //for (int i = 1; i<=2; i++) //alt hardcoding it
+                for (int i=1; i<=dataMultiList.Count; i++)
                 {
                     List<string[]> subList = dataMultiList[i-1]; //List copy
                     for (int j=1; j<subList.Count; j++)
