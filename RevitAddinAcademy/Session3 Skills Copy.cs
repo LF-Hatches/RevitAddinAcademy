@@ -112,8 +112,9 @@ namespace RevitAddinAcademy
                 ViewPlan curRCP = ViewPlan.Create(doc, curRCPVFT.Id, newLevel.Id);
                 curRCP.Name = curRCP.Name + "RCP";
                 //Class clal
+                /*
                 View existingView = GetViewByName(doc, "Level 3");
-                if(existingView 1= null)
+                if(existingView 1== null)
                 {
                     Viewport newVP = Viewport.Create(doc, newSheet.Id, curPlan.Id, new XYZ(0, 0, 0));
                 }
@@ -121,7 +122,7 @@ namespace RevitAddinAcademy
                 {
                     TaskDialog.Show(); //add more from 
                 }
-
+                */
                 ViewSheet newSheet = ViewSheet.Create(doc, collector2.FirstElementId());
                 Viewport newVP = Viewport.Create(doc, newSheet.Id, curPlan.Id, new XYZ(0, 0, 0));
 
