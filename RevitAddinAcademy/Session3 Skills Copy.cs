@@ -31,7 +31,26 @@ namespace RevitAddinAcademy
             dialog.Multiselect = false; //Single File vs multiple Files true
             dialog.Filter = "Revit Files | *.rvt; *.rfa";     //revit   if not specified, check file
             dialog.Filter = "Excel Files | *xlsx; *.xls *.xlxm"; //excel
-            
+            /*
+                         /* Structs initialize in read data section //delete this
+            //DATA STRUCTURES
+            //LEVELS
+            LevelStruct levelData;           //3 in current data file, Levels is WB name
+            levelData.Name = "Level Name";  //Level Names
+            levelData.Elevation = 100.00;   //Level Elevations
+            levelData.ElevationM = 10.5;    //Metric Elevations
+
+            //SHEETS
+            SheetStruct sheetData;           //5 in current data file, Sheets is WB name
+            sheetData.SheetNumber = "A-101";     //Sheet Number
+            sheetData.SheetName = "Sheet Name";  //Sheet Name
+            sheetData.ViewLevel = "Level Name";  //View Level Name
+            sheetData.DrawnBy = "AA";          //DrawnBy
+            sheetData.CheckedBy = "BB";          //CheckedBy
+            sheetData.SheetDisc = "Architectural"; //Discipline Header
+            sheetData.SheetSort = 5.0;           //Sort Order
+            */
+            */
             string filePath = "";
             string[] filePaths; //if multiple files
             //FolderBrowserDialog vs FileBrowserDialog
