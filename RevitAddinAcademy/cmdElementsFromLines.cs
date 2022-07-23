@@ -10,13 +10,17 @@ using System.Collections;              //ArrayList, toChar and toInt
 using System.Diagnostics;
 using Excel = Microsoft.Office.Interop.Excel;
 using Forms = System.Windows.Forms;    //Added for Get File Name
+using Autodesk.Revit.DB.Plumbing;
+using Autodesk.Revit.DB.Mechanical;
+using Autodesk.Revit.DB.Structure;
+using Autodesk.Revit.DB.Architecture;  //rooms
 
 #endregion
 
 namespace RevitAddinAcademy
 {
     [Transaction(TransactionMode.Manual)]
-    public class cmdProjectSetup : IExternalCommand  //rename for each new cmd file
+    public class cmdElementsFromLines : IExternalCommand  //rename for each new cmd file
     {
         public Result Execute(
           ExternalCommandData commandData,
@@ -28,256 +32,197 @@ namespace RevitAddinAcademy
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            //Get Filepath from Dialog Box
-            Forms.OpenFileDialog dialog = new Forms.OpenFileDialog(); //dialog box initialized
-            dialog.InitialDirectory = @"C:\"; //initial directory
-            dialog.Multiselect = false;       //single file
-            dialog.Filter = "Excel Files | *.xlsx; *.xls"; //excel files
-            //dialog.ShowHelp = true;
-            //dialog.HelpRequest = "";
+            IList<Element> pickList = uidoc.Selection.PickElementsByRectangle("Select some elements");
+            List<CurveElement> curveList = new List<CurveElement>();
 
-            string filePath = "";             //initialize filepath
-            string[] filePaths;               //multiple filepaths
-            if (dialog.Multiselect == true)    //switch between multiple and single files
-            {
-                if (dialog.ShowDialog() == Forms.DialogResult.OK)
-                {
-                    filePaths = dialog.FileNames;
-                }
-            }
-            else
-            {
-                if (dialog.ShowDialog() == Forms.DialogResult.OK)
-                {
-                    filePath = dialog.FileName;
-                }
-            }
+            Level curLevel = GetLevelByName(doc, "Level 1");
 
-            //single filepath
-            string excelFile = filePath; //pointed to new file; 
-            //multiple filepaths - loop through with list of strings - not used here.
+            //A - GLAZ - Storefront wall
+            //A - WALL - Generic 8" wall
+            //M - DUCT - Default duct
+            //P - PIPE - Default pipe
 
- 
+            WallType curWallType = GetWallTypeByName(doc, @"Generic - 8"""); //Generic 8" wall
+            WallType curWallType2 = GetWallTypeByName(doc, @"Storefront");   //Storefront wall
+            //CurtainSystemType curCurtainWall = GetCWTypeByName(doc, "Storefront"); //Storefront wall
 
+            MEPSystemType curSystemType = GetSystemTypeByName(doc, "Domestic Hot Water"); //domestic cold water, sanitary
+            PipeType curPipeType = GetPipeTypeByName(doc, "Default"); //default pipe
+
+            MEPSystemType curHVACType = GetSystemTypeByName(doc, "Supply Air"); //mechanical duct
+            DuctType curDuctType = GetDuctTypeByName(doc, "Default"); //default duct
+
+            int linecount = 0;
 
             using (Transaction t = new Transaction(doc))
             {
                 t.Start("Generate Lines"); //Start transaction
 
+                foreach (Element element in pickList)
+                {
+                    //Filter selection Curve, Line, point, etc.
+                    if (element is CurveElement)
+                    {
+                        CurveElement curve = (CurveElement)element;
+                        //CurveElement curve = element as CurveElement;
+                        //curveList.Add(curve);
+
+                        Curve curCurve = curve.GeometryCurve;
+
+                        GraphicsStyle curGS = curve.LineStyle as GraphicsStyle;
+
+
+                        //SWITCH STATEMENT
+                        switch (curGS.Name)
+                        {
+                            case "A-GLAZ":
+                                Debug.Print("Found a storefront line");
+                                Wall newSFWall = Wall.Create(
+                                    doc,
+                                    curCurve,
+                                    curWallType2.Id,
+                                    curLevel.Id,
+                                    15,
+                                    0,
+                                    false,
+                                    false);
+                                ++linecount;
+                                break;
+
+                            case "A-WALL":
+                                Debug.Print("Found a wall line");
+                                Wall newWall = Wall.Create(
+                                    doc, 
+                                    curCurve, 
+                                    curWallType.Id, 
+                                    curLevel.Id, 
+                                    15, 
+                                    0, 
+                                    false, 
+                                    false);
+                                ++linecount;
+                                break;
+
+                            case "M-DUCT":
+                                Debug.Print("Found a duct line");
+                                XYZ startpoint = curCurve.GetEndPoint(0); //argument zero is endpoint 1 of 2
+                                XYZ endpoint = curCurve.GetEndPoint(1); //argument one is endpoint 2 of 2
+                                Duct newDuct = Duct.Create(
+                                    doc,
+                                    curHVACType.Id,
+                                    curDuctType.Id,
+                                    curLevel.Id,
+                                    startpoint,
+                                    endpoint);
+                                ++linecount;
+                                break;
+                            case "P-PIPE":
+                                Debug.Print("Found a pipe line");
+                                XYZ startpoint2 = curCurve.GetEndPoint(0); //argument zero is endpoint 1 of 2
+                                XYZ endpoint2 = curCurve.GetEndPoint(1);   //argument one is endpoint 2 of 2
+                                ++linecount;
+
+                                Pipe newPipe = Pipe.Create(
+                                    doc,
+                                    curSystemType.Id,
+                                    curPipeType.Id,
+                                    curLevel.Id,
+                                    startpoint2,
+                                    endpoint2);
+
+                                break;
+                            default:
+                                Debug.Print("Found something else");
+                                break;
+                        }
+                        Debug.Print(curGS.Name);
+                        Debug.Print("Linecount: " + linecount.ToString());
+                    }
+                }
 
 
                 t.Commit(); //Commit Transaction
             }
 
-
-
-            TaskDialog.Show("Hello", "This is my first command add-in.");
-            TaskDialog.Show("HEllo again", "This is another window");
+            TaskDialog.Show("Completed", linecount.ToString());
 
             return Result.Succeeded;
         }
 
+
+
         //Class
-        internal View GetViewByName(Document doc, string viewName)
+        private WallType GetWallTypeByName(Document doc, string wallTypeName)
         {
             FilteredElementCollector collector = new FilteredElementCollector(doc);
-            collector.OfClass(typeof(View));
-
-            foreach (View curView in collector)
+            collector.OfClass(typeof(WallType));
+            foreach (Element curElem in collector)
             {
-                if (curView.Name == viewName)
-                {
-                    return curView;
-                }
+                WallType wallType = curElem as WallType;
+                if (wallType.Name == wallTypeName)
+                    return wallType;
             }
             return null;
         }
-
-        //READ EXCEL CLASS
-        internal List<SheetStruct> ReadExcelSheets(Excel.Workbook excelWb, int i)    //dataSheetList = ReadExcelSheets(excelWb, i);    //code this method
+        private CurtainSystemType GetCWTypeByName(Document doc, string cwallTypeName)
         {
-            //initialize struct //set to new things in loop //leave these as blanks
-            //SHEETS
-            SheetStruct sheetData;           //5 in current data file, Sheets is WB name
-            sheetData.SheetNumber = "A-101";     //Sheet Number
-            sheetData.SheetName = "Sheet Name";  //Sheet Name
-            sheetData.ViewLevel = "Level Name";  //View Level Name
-            sheetData.DrawnBy = "AA";            //DrawnBy
-            sheetData.CheckedBy = "BB";          //CheckedBy
-            sheetData.SheetDisc = "Architectural"; //Discipline Header
-            sheetData.SheetSort = 5.0;           //Sort Order
-            sheetData.LevelElemID = 0;           //LevelElemID
-
-            //initialize list
-            List<SheetStruct> structList = new List<SheetStruct>();
-
-            //loop through WB range i j x
-            //Workbook Sheet - First sheet is 1 not 0
-
-            Excel.Worksheet excelWs = excelWb.Worksheets.Item[i];
-            Excel.Range excelRng = excelWs.UsedRange;
-            int rowCount = excelRng.Rows.Count;
-            int colCount = excelRng.Columns.Count;
-            //List<int[]> indexList = new List<int[]>(); //Collection of header nums, use if out of order
-
-            for (int j = 1; j <= rowCount; j++) //loop through rows
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(CurtainSystemType));
+            foreach (Element curElem in collector)
             {
-                for (int k = 1; k <= colCount; k++) //loop through cols. last one is double, so change
-                {
-                    Excel.Range cell1 = excelWs.Cells[j, k]; //Cell at first row and 1st --- 5th cell of first column, 
-                    if (k == 7)
-                    {
-                        double data1 = cell1.Value.ToDouble();
-                        sheetData.SetDoubleAtIndex(data1, k); //Add double to struct at k
-                    }
-                    else
-                    {
-                        string data1 = cell1.Value.ToString();
-                        sheetData.SetStringAtIndex(data1, k); //Add string to struct at k
-                    }
-                }
-                sheetData.SetIntAtIndex(0, 8);           //LevelElemID initialized to zero
-                //Add row (struct data set) to struct list
-                structList.Add(sheetData);
+                CurtainSystemType cwallType = curElem as CurtainSystemType;
+                if (cwallType.Name == cwallTypeName)
+                    return cwallType;
             }
-            Debug.Print("Got here sheets");  //Check-in
-
-            return structList;
+            return null;
         }
-        internal List<LevelStruct> ReadExcelLevels(Excel.Workbook excelWb, int i)    //dataLevelList = ReadExcelLevels(excelWb, i);    //code this method
+        private Level GetLevelByName(Document doc, string levelName)
         {
-            //initialize struct //set to new things in loop //leave these as blanks
-            //LEVELS
-            LevelStruct levelData;           //3 in current data file, Levels is WB name
-            levelData.Name = "Level Name";  //Level Names
-            levelData.Elevation = 100.00;   //Level Elevations
-            levelData.ElevationM = 10.5;    //Metric Elevations
-            levelData.ElemID = 0;           //Element ID
-
-            //initialize list
-            List<LevelStruct> structList = new List<LevelStruct>();
-
-            //loop through WB range i j x
-            //Workbook Sheet - First sheet is 1 not 0
-            Excel.Worksheet excelWs = excelWb.Worksheets.Item[i];
-            Excel.Range excelRng = excelWs.UsedRange;
-            int rowCount = excelRng.Rows.Count;
-            int colCount = excelRng.Columns.Count;
-
-            for (int j = 1; j <= rowCount; j++) //loop through rows
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(Level));
+            foreach (Element curElem in collector)
             {
-                for (int k = 1; k <= colCount; k++) //loop through cols. First row only is string.
-                {
-                    if (k == 1)
-                    {
-                        Excel.Range cell1 = excelWs.Cells[j, k]; //Cell at first row and 1st --- 2nd cell of first column 
-                        string data1 = cell1.Value.ToString();
-                        levelData.SetStringAtIndex(data1, k);    //Add string to struct at k     
-                    }
-                    else
-                    {
-                        Excel.Range cell1 = excelWs.Cells[j, k]; //Cell at first row and 1st --- 2nd cell of first column 
-                        double data1 = cell1.Value.ToDouble();
-                        levelData.SetDoubleAtIndex(data1, k);    //Add string to struct at k   
-                    }
-                }
-                levelData.SetIntAtIndex(0, 4);           //Element ID initialized
-                //Add row (struct data set) to struct list
-                structList.Add(levelData);
+                Level level = curElem as Level;
+                if (level.Name == levelName)
+                    return level;
             }
-            Debug.Print("Got here Levels");  //Check-in
-            return structList;
+            return null;
         }
-        
-        //DATA STRUCTURES
-        internal struct LevelStruct  //3 in current data file, Levels is WB name
+        private MEPSystemType GetSystemTypeByName(Document doc, string typeName)
         {
-            //Define variables accessed from outside
-            public string Name;
-            public double Elevation;
-            public double ElevationM;
-            public int    ElemID;           //Element ID
-
-            //constructor method
-            //method inside structure that is named the same; specify arguments inside it.
-            public LevelStruct(string name, double elevation, double elevationM, int elemid)
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(MEPSystemType));
+            foreach (Element curElem in collector)
             {
-                Name = name;
-                Elevation = elevation;
-                ElevationM = elevationM;
-                ElemID = elemid;
-
+                MEPSystemType curType = curElem as MEPSystemType;
+                if (curType.Name == typeName)
+                    return curType;
             }
-            public void SetStringAtIndex(string passedstring, int index)    //struct method
-            {
-                if (index == 1) { Name = passedstring; }
-                return;
-            }
-            public void SetDoubleAtIndex(double passedvalue, int index)    //struct method
-            {
-                if (index == 2) { Elevation = passedvalue; }
-                else if (index == 3) { ElevationM = passedvalue; }
-                return;
-            }
-            public void SetIntAtIndex(int passedval, int index)    //struct method
-            {
-                if (index == 4) { ElemID = passedval; }
-                return;
-            }
-
+            return null;
         }
-
-        internal struct SheetStruct  //5 in current data file, Sheets is WB name
+        private PipeType GetPipeTypeByName(Document doc, string typeName)
         {
-            //Define variables accessed from outside
-            public string SheetNumber;      //Sheet Number
-            public string SheetName;        //Sheet Name
-            public string ViewLevel;        //View Level Name
-            public string DrawnBy;          //DrawnBy
-            public string CheckedBy;        //CheckedBy
-            public string SheetDisc;        //Discipline Header
-            public double SheetSort;        //Sort Order
-            public int LevelElemID;         //LevelElemID
-
-            public SheetStruct(            //constructor
-                string sheetnumber,
-                string sheetname,
-                string viewlevel,
-                string drawnby,
-                string checkedby,
-                string sheetdisc,
-                double sheetsort,
-                int levelelemid)
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(PipeType));
+            foreach (Element curElem in collector)
             {
-                SheetNumber = sheetnumber;    //Sheet Number
-                SheetName = sheetname;        //Sheet Name
-                ViewLevel = viewlevel;        //View Level Name
-                DrawnBy = drawnby;            //DrawnBy
-                CheckedBy = checkedby;        //CheckedBy
-                SheetDisc = sheetdisc;        //Discipline Header
-                SheetSort = sheetsort;        //Sort Order
-                LevelElemID = levelelemid;    //LevelElemID
+                PipeType curType = curElem as PipeType;
+                if (curType.Name == typeName)
+                    return curType;
             }
-            public void SetStringAtIndex(string passedstring, int index)    //struct method
+            return null;
+        }
+        private DuctType GetDuctTypeByName(Document doc, string typeName)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(DuctType));
+            foreach (Element curElem in collector)
             {
-                if (index == 1) { SheetNumber = passedstring; }
-                else if (index == 2) { SheetName = passedstring; }
-                else if (index == 3) { ViewLevel = passedstring; }
-                else if (index == 4) { DrawnBy = passedstring; }
-                else if (index == 5) { CheckedBy = passedstring; }
-                else if (index == 6) { SheetDisc = passedstring; }
-                return;
+                DuctType curType = curElem as DuctType;
+                if (curType.Name == typeName)
+                    return curType;
             }
-            public void SetDoubleAtIndex(double passedvalue, int index)    //struct method
-            {
-                if (index == 7) { SheetSort = passedvalue; }
-                return;
-            }
-            public void SetIntAtIndex(int passedvalue, int index)    //struct method
-            {
-                if (index == 8) { LevelElemID = passedvalue; }
-                return;
-            }
+            return null;
         }
     }
 }

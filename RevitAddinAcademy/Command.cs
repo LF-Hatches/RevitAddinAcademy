@@ -11,7 +11,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Autodesk.Revit.DB.Plumbing;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Structure;
-using Autodesk.Revit.DB.Mechanical;
+using Autodesk.Revit.DB.Architecture;
 
 
 #endregion
@@ -87,6 +87,7 @@ namespace RevitAddinAcademy
 
 
                         //Wall newWall = Wall.Create(doc, curCurve, curWallType.Id, curLevel.Id, 15, 0, false, false);
+                        /*
                         Pipe newPipe = Pipe.Create(
                             doc,
                             curSystemType.Id,
@@ -94,7 +95,8 @@ namespace RevitAddinAcademy
                             curLevel.Id,
                             startpoint,
                             endpoint);
-                        
+                        */
+
                         Debug.Print(curGS.Name);
 
                     } 
