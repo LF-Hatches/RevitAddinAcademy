@@ -16,7 +16,7 @@ using Forms = System.Windows.Forms;    //Added for Get File Name
 namespace RevitAddinAcademy
 {
     [Transaction(TransactionMode.Manual)]
-    public class cmdElementsFromLines : IExternalCommand  //rename for each new cmd file
+    public class cmdProjectSetup : IExternalCommand  //rename for each new cmd file
     {
         public Result Execute(
           ExternalCommandData commandData,

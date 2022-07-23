@@ -10,11 +10,20 @@
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
   </AddIn>
   <AddIn Type="Command">
-		<Text>Challenge Session 02</Text>
+		<Text>Challenge Session 04 - Elements from Lines</Text>
+		<Description>Some description for RevitAddinAcademy</Description>
+		<Assembly>RevitAddinAcademy.dll</Assembly>
+		<FullClassName>RevitAddinAcademy.cmdElementsFromLines</FullClassName>
+		<ClientId>7C3C8F50-73A1-45DB-87ED-01F2E951583F</ClientId>
+		<VendorId>com.typepad.thebuildingcoder</VendorId>
+		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+	</AddIn>
+	<AddIn Type="Command">
+		<Text>Challenge Session 03 - Project Setup</Text>
 		<Description>Some description for RevitAddinAcademy</Description>
 		<Assembly>RevitAddinAcademy.dll</Assembly>
 		<FullClassName>RevitAddinAcademy.cmdProjectSetup</FullClassName>
-		<ClientId>1A815D37-A4C8-41EC-BE24-AF283DAA40D5</ClientId>
+		<ClientId>3788A57E-4C31-424F-971B-DD2A03DF1C0A</ClientId>
 		<VendorId>com.typepad.thebuildingcoder</VendorId>
 		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
 	</AddIn>
