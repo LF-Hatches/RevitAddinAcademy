@@ -200,7 +200,7 @@ namespace RevitAddinAcademy
                     if (dataSheetList[i].SheetName.Contains("RCP"))
                     {
                         ViewPlan curRCP = ViewPlan.Create(doc, curRCPVFT.Id, id);
-                        curRCP.Name = curRCP.Name + "RCP"; //delete RCPs out of view level column in excel
+                        curRCP.Name += "RCP"; //delete RCPs out of view level column in excel
                         //Class call
                         View existingView = GetViewByName(doc, dataSheetList[i].ViewLevel); //enter "level 3" abstract
                         if (existingView != null)
@@ -476,15 +476,6 @@ namespace RevitAddinAcademy
             {
                 if (index == 8) { LevelElemID = passedvalue; }
                 return;
-            }
-
-            public string addSuffix(string passedstring, string suffx)    //struct method
-            {
-                return (passedstring + suffx);
-            }
-            public string addPrefix(string passedstring, string prefx)    //struct method
-            {
-                return (prefx + passedstring);
             }
         }
     }

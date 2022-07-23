@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="cmdProjectSetup.cs" />
-    <Compile Include="Session3 Skills Copy.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

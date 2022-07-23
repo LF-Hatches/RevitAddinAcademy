@@ -8,6 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Excel = Microsoft.Office.Interop.Excel;
+using Autodesk.Revit.DB.Plumbing;
+using Autodesk.Revit.DB.Mechanical;
+using Autodesk.Revit.DB.Structure;
+using Autodesk.Revit.DB.Mechanical;
+
 
 #endregion
 
@@ -26,59 +31,129 @@ namespace RevitAddinAcademy
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            string excelFile = @"C:\Users\LFarrell\Desktop\Revit Add-in Academy\Class Week 2\Session02_CombinationSheetList-220706-171323.xlsx";
+            IList<Element> pickList = uidoc.Selection.PickElementsByRectangle("Select some element");
+            List<CurveElement> curveList = new List<CurveElement>();
 
-            Excel.Application excelApp = new Excel.Application();        //Open Application Excel
-            Excel.Workbook excelWb = excelApp.Workbooks.Open(excelFile); //Workbook File
-            Excel.Worksheet excelWs = excelWb.Worksheets.Item[1];        //Worksheet Sheet - First sheet is 1 not 0
-
-            Excel.Range excelRng = excelWs.UsedRange;
-            int rowCount = excelRng.Rows.Count;
-            // Read Excel - Transforming Rows and Columns to List of Arrays
-            List<string[]> dataList = new List<string[]>(); //Collection of string arrays
-            for (int i=1; i<=rowCount; i++)
+            WallType curWallType = GetWallTypeByName(doc, @"Generic - 8""");
+            Level curLevel = GetLevelByName(doc, "Level 1");
+            MEPSystemType curSystemType = GetSystemTypeByName(doc, "Domestic Hot Water");
+            PipeType curPipeType = GetPipeTypeByName(doc, "Default");
+            using (Transaction t = new Transaction(doc)) 
             {
-                Excel.Range cell1 = excelWs.Cells[i, 1]; //First cell of first column
-                Excel.Range cell2 = excelWs.Cells[i, 2]; //First cell of second column
+                t.Start("Create Revit stuff");
+                foreach (Element element in pickList)
+                {
+                    //Filter selection Curve, Line, point, etc.
+                    if (element is CurveElement)
+                    {
+                        CurveElement curve = (CurveElement)element;
+                        CurveElement curve2 = element as CurveElement;
+                        curveList.Add(curve);
 
-                string data1 = cell1.Value.ToString();
-                string data2 = cell2.Value.ToString();
+                        GraphicsStyle curGS = curve.LineStyle as GraphicsStyle;
 
-                string[] dataArray = new string[2];      //two elements in array
-                dataArray[0] = data1;
-                dataArray[1] = data2;
-                dataList.Add(dataArray);
+                        Curve curCurve = curve.GeometryCurve;
+                        XYZ startpoint = curCurve.GetEndPoint(0); //argument zero is endpoint 1 of 2
+                        XYZ endpoint = curCurve.GetEndPoint(1); //argument one is endpoint 2 of 2
+
+
+                        //SWITCH STATEMENT
+                        switch (curGS.Name)
+                        {
+                            case "<Medium>":
+                                Debug.Print("Found a medium line");
+                                break;
+
+                            case "<Thin lines>":
+                                Debug.Print("Found a thine line");
+                                break;
+
+                            case "<Wide lines>":
+                                Debug.Print("Found a wide line");
+                                Pipe newPipe = Pipe.Create(
+                                    doc,
+                                    curSystemType.Id,
+                                    curPipeType.Id,
+                                    curLevel.Id,
+                                    startpoint,
+                                    endpoint);
+                                break;
+
+                            default:
+                                Debug.Print("Found something else");
+                                break;
+                        }
+
+
+
+                        //Wall newWall = Wall.Create(doc, curCurve, curWallType.Id, curLevel.Id, 15, 0, false, false);
+                        Pipe newPipe = Pipe.Create(
+                            doc,
+                            curSystemType.Id,
+                            curPipeType.Id,
+                            curLevel.Id,
+                            startpoint,
+                            endpoint);
+                        
+                        Debug.Print(curGS.Name);
+
+                    } 
+                }
+                t.Commit();
             }
-            using(Transaction t = new Transaction(doc))
-            {
-                t.Start("Create some Revit stuff"); //Start transaction
-                Level curLevel = Level.Create(doc, 100);     //imperial feet
-                FilteredElementCollector collector = new FilteredElementCollector(doc);
-                collector.OfCategory(BuiltInCategory.OST_TitleBlocks); //get Titleblock Type Category
-                collector.WhereElementIsElementType();  //Types of titleblock types
-                ViewSheet curSheet = ViewSheet.Create(doc, collector.FirstElementId()); //uses first type of titleblock kind
- /*  Build in Error Checking Procedures for sheets, for levels
-                //check for if placeholder - overwrite or leave
-                //check for if sheet number exists already - get list of current sheets in doc
-                //loop through current sheet numbers to check
-                //if placeholder, delete placeholder and make new sheet
-                //if not placeholder - skip entry?
- */
- 
-                curSheet.SheetNumber = "A101010"; //Directly exposed elements. Checker checkedby etc not avail.
-                curSheet.Name = "New Sheet";
-
-                t.Commit(); //Commit Transaction
-            }
-
-
-            excelWb.Close();
-            excelApp.Quit();
-
-            TaskDialog.Show("Hello", "This is my first command add-in.");
-            TaskDialog.Show("HEllo again", "This is another window");
-            
+            TaskDialog.Show("Complete", curveList.Count.ToString());
+                        
             return Result.Succeeded;
+        }
+        private WallType GetWallTypeByName(Document doc, string wallTypeName)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(WallType));
+            foreach(Element curElem in collector)
+            {
+                WallType wallType = curElem as WallType;
+                if (wallType.Name == wallTypeName)
+                    return wallType;
+            }
+            return null;
+        }
+
+        private Level GetLevelByName(Document doc, string levelName)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(Level));
+            foreach (Element curElem in collector)
+            {
+                Level level = curElem as Level;
+                if (level.Name == levelName)
+                    return level;
+            }
+            return null;
+        }
+
+        private MEPSystemType GetSystemTypeByName(Document doc, string typeName)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(MEPSystemType));
+            foreach (Element curElem in collector)
+            {
+                MEPSystemType curType = curElem as MEPSystemType;
+                if (curType.Name == typeName)
+                    return curType;
+            }
+            return null;
+        }
+        private PipeType GetPipeTypeByName(Document doc, string typeName)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(PipeType));
+            foreach (Element curElem in collector)
+            {
+                PipeType curType = curElem as PipeType;
+                if (curType.Name == typeName)
+                    return curType;
+            }
+            return null;
         }
     }
 }
