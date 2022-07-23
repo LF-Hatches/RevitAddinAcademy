@@ -38,7 +38,7 @@ namespace RevitAddinAcademy
 
             string filePath = "";             //initialize filepath
             string[] filePaths;               //multiple filepaths
-            if (dialog.Multiselect == true)    //switch between multiple and single files
+            if (dialog.Multiselect == true)   //switch between multiple and single files
             {
                 if (dialog.ShowDialog() == Forms.DialogResult.OK)
                 {
@@ -60,6 +60,11 @@ namespace RevitAddinAcademy
             Excel.Application excelApp = new Excel.Application();        //Open Application Excel
             Excel.Workbook excelWb = excelApp.Workbooks.Open(excelFile); //Workbook File
             int NumWBSheets = excelWb.Sheets.Count;                      //Number of sheets to loop through
+            
+            //Challenge part 3 - call worksheets by name
+            //Excel.Worksheet excelWs1 = GetExcelWorksheetByName(excelWb, "Levels");
+            //Excel.Worksheet excelWs2 = GetExcelWorksheetByName(excelWb, "Sheets");
+
 
             //THIS IS WHERE WE SWITCH TO LIST OF STRUCTS INSTEAD OF STRINGS
             List<SheetStruct> dataSheetList = new List<SheetStruct>();
@@ -81,6 +86,7 @@ namespace RevitAddinAcademy
                     dataLevelList = ReadExcelLevels(excelWb, i);
                 }
             }
+
             //Information has been stored in dataSheetList and dataLevelList;
             //Lists can't contain Structs of different types...
 
@@ -363,7 +369,7 @@ namespace RevitAddinAcademy
             int rowCount = excelRng.Rows.Count;
             int colCount = excelRng.Columns.Count;
 
-            for (int j = 1; j <= rowCount; j++) //loop through rows
+            for (int j = 2; j <= rowCount; j++) //loop through rows - start at 2 to skip the header
             {
                 for (int k = 1; k <= colCount; k++) //loop through cols. First row only is string.
                 {
@@ -375,9 +381,9 @@ namespace RevitAddinAcademy
                     }
                     else
                     {
-                        Excel.Range cell1 = excelWs.Cells[j, k]; //Cell at first row and 1st --- 2nd cell of first column 
-                        double data1 = cell1.Value.ToDouble();
-                        levelData.SetDoubleAtIndex(data1, k);    //Add string to struct at k   
+                        Excel.Range cell2 = excelWs.Cells[j, k]; //Cell at first row and 1st --- 2nd cell of first column 
+                        double data2 = cell2.Value();
+                        levelData.SetDoubleAtIndex(data2, k);    //Add string to struct at k   
                     }
                 }
                 levelData.SetIntAtIndex(0, 4);           //Element ID initialized
@@ -405,7 +411,6 @@ namespace RevitAddinAcademy
                 Elevation = elevation;
                 ElevationM = elevationM;
                 ElemID = elemid;
-
             }
             public void SetStringAtIndex(string passedstring, int index)    //struct method
             {
@@ -477,7 +482,7 @@ namespace RevitAddinAcademy
                 if (index == 8) { LevelElemID = passedvalue; }
                 return;
             }
-
+            /*
             public string addSuffix(string passedstring, string suffx)    //struct method
             {
                 return (passedstring + suffx);
@@ -486,6 +491,7 @@ namespace RevitAddinAcademy
             {
                 return (prefx + passedstring);
             }
+            */
         }
     }
 }
