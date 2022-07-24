@@ -19,6 +19,15 @@
 		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
 	</AddIn>
 	<AddIn Type="Command">
+		<Text>Bonus Tool - Walls from Lines</Text>
+		<Description>Some description for RevitAddinAcademy</Description>
+		<Assembly>RevitAddinAcademy.dll</Assembly>
+		<FullClassName>RevitAddinAcademy.cmdWallsFromLines</FullClassName>
+		<ClientId>5D964492-D61F-4885-9A2E-2D777B40C614</ClientId>
+		<VendorId>com.typepad.thebuildingcoder</VendorId>
+		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+	</AddIn>
+	<AddIn Type="Command">
 		<Text>Challenge Session 03 - Project Setup</Text>
 		<Description>Some description for RevitAddinAcademy</Description>
 		<Assembly>RevitAddinAcademy.dll</Assembly>
