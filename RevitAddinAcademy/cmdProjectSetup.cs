@@ -38,7 +38,7 @@ namespace RevitAddinAcademy
 
             string filePath = "";             //initialize filepath
             string[] filePaths;               //multiple filepaths
-            if (dialog.Multiselect == true)    //switch between multiple and single files
+            if (dialog.Multiselect == true)   //switch between multiple and single files
             {
                 if (dialog.ShowDialog() == Forms.DialogResult.OK)
                 {
@@ -54,224 +54,117 @@ namespace RevitAddinAcademy
             }
 
             //single filepath
-            string excelFile = filePath; //pointed to new file; 
-            //multiple filepaths - loop through with list of strings - not used here.
+            string excelFile = filePath;
+            int levelCounter = 0;
+            int sheetCounter = 0;
 
-            Excel.Application excelApp = new Excel.Application();        //Open Application Excel
-            Excel.Workbook excelWb = excelApp.Workbooks.Open(excelFile); //Workbook File
-            int NumWBSheets = excelWb.Sheets.Count;                      //Number of sheets to loop through
-
-            //THIS IS WHERE WE SWITCH TO LIST OF STRUCTS INSTEAD OF STRINGS
-            List<SheetStruct> dataSheetList = new List<SheetStruct>();
-            List<LevelStruct> dataLevelList = new List<LevelStruct>();
-
-            //Get all data first. Then do revit actions.
-            //Read Excel - Transforming Rows and Columns to List of Structs
-            for (int i = 1; i <= NumWBSheets; i++) //Loop through all WB sheets
+            try
             {
-                string excelWSName = excelWb.Sheets[i].Name;
-                //if named Sheets - run sheet method
-                if (excelWSName == "Sheets")
+                Excel.Application excelApp = new Excel.Application();        //Open Application Excel
+                Excel.Workbook excelWb = excelApp.Workbooks.Open(excelFile); //Workbook File
+                int NumWBSheets = excelWb.Sheets.Count;                      //Number of sheets to loop through
+
+                //Challenge part 3 - call worksheets by name
+                //Excel.Worksheet excelWs1 = GetExcelWorksheetByName(excelWb, "Levels");
+                //Excel.Worksheet excelWs2 = GetExcelWorksheetByName(excelWb, "Sheets");
+
+                //Initializing list of structs
+                List<SheetStruct> dataSheetList = new List<SheetStruct>();
+                List<LevelStruct> dataLevelList = new List<LevelStruct>();
+
+                //Get all data first. Then do revit actions.
+                //Read Excel - Transforming Rows and Columns Struct, putting Struct in List
+                for (int i = 1; i <= NumWBSheets; i++) //Loop through all WB sheets
                 {
-                    dataSheetList = ReadExcelSheets(excelWb, i);
+                    string excelWSName = excelWb.Sheets[i].Name;
+                    //if named Sheets - run sheet method
+                    if (excelWSName == "Sheets")
+                    {
+                        dataSheetList = ReadExcelSheets(excelWb, i);
+                    }
+                    //if named Levels - run levels method
+                    else if (excelWSName == "Levels")
+                    {
+                        dataLevelList = ReadExcelLevels(excelWb, i);
+                    }
                 }
-                //if named Levels - run levels method
-                else if (excelWSName == "Levels")
+                excelWb.Close();
+                excelApp.Quit();
+
+                //Information has been stored in dataSheetList and dataLevelList;
+
+
+                using (Transaction t = new Transaction(doc))
                 {
-                    dataLevelList = ReadExcelLevels(excelWb, i);
+                    t.Start("Project Setup"); //Start transaction
+
+                    //Setup Viewport Type
+                    ViewFamilyType planVFT = GetViewFamilyType(doc, "plan");
+                    ViewFamilyType rcpVFT = GetViewFamilyType(doc, "rcp");
+
+                    //FOR LEVELS
+                    //processing: dataLevelList
+                    foreach (LevelStruct curLevel in dataLevelList)
+                    {
+                        Level newLevel = Level.Create(doc, curLevel.Elevation);
+                        newLevel.Name = curLevel.Name;
+                        levelCounter++;
+
+                        int idInteger = newLevel.Id.IntegerValue;
+                        curLevel.SetIntAtIndex(idInteger, 4); //4th item in struct
+                                                              //WHY DOES THIS WORK? How does it know whether RCP or PLAN?
+                                                              //basically making a plan and an RCP per each level blind.
+                        ViewPlan curFloorPlan = ViewPlan.Create(doc, planVFT.Id, newLevel.Id);
+                        ViewPlan curRCP = ViewPlan.Create(doc, rcpVFT.Id, newLevel.Id);
+
+                        curRCP.Name = curRCP.Name + " RCP";
+                    }
+
+                    //FOR SHEETS
+                    //processing: dataSheetList
+                    FilteredElementCollector collector = GetTitleblock(doc);
+                    //Set to "ICON 30x42 - Horizontal Title Block"
+
+                    foreach (SheetStruct curSheet in dataSheetList)
+                    {
+                        ViewSheet newSheet = ViewSheet.Create(doc, collector.FirstElementId());
+
+                        newSheet.SheetNumber = curSheet.SheetNumber;
+                        newSheet.Name = curSheet.SheetName;
+
+                        SetParameterValue(newSheet, "Drawn By", curSheet.DrawnBy);
+                        SetParameterValue(newSheet, "Checked By", curSheet.CheckedBy);
+                        //Set protected variables
+                        //SetParameterValue(newSheet, "Sheet Discipline", curSheet.SheetDisc); //Doesn't exist
+                        //SetParameterValue(newSheet, "Sort Order", curSheet.SheetSort); //Doesn't exist
+
+
+                        View curView = GetViewByName(doc, curSheet.ViewLevel);
+
+                        if (curView != null)
+                        {
+                            Viewport curVP = Viewport.Create(
+                                doc,
+                                newSheet.Id,
+                                curView.Id,
+                                new XYZ(0.5, 0.5, 0)
+                                );
+                        }
+
+                        sheetCounter++;
+
+                    }
+
+                    t.Commit(); //Commit Transaction
                 }
             }
-            //Information has been stored in dataSheetList and dataLevelList;
-            //Lists can't contain Structs of different types...
-
-            //Do Revit Actions
-
-            /*
-             
-            //View Creation
-
-          
-            FilteredElementCollector collector = new FilteredElementCollector(doc);
-            collector.OfClass(typeof(ViewFamilyType));
-            ViewFamilyType curVFT = null;
-            ViewFamilyType curRCPVFT = null;
-            //base type is Element - most generic use
-            foreach(ViewFamilyType curElem in collector)
+            catch (Exception ex)
             {
-                //if don't know name
-                if(curElem.ViewFamily == ViewFamily.FloorPlan)
-                {
-                    curVFT = curElem;
-                }
-                //if do know name
-                if (curElem.Name == "Floor Plan")
-                {
-                    curVFT = curElem;
-                }
-                else if(curElem.ViewFamily == ViewFamily.CeilingPlan)
-                {
-                    curRCPVFT = curElem;
-                }
+                Debug.Print(ex.Message);
             }
 
-
-            FilteredElementCollector collector2 = new FilteredElementCollector(doc);
-            collector2.OfCategory(BuiltInCategory.OST_TitleBlocks);
-            collector2.WhereElementIsElementType();
-
-             
-             */
-
-
-            using (Transaction t = new Transaction(doc))
-            {
-                t.Start("Project Setup"); //Start transaction
-
-                //Setup Viewport Type (session 03)
-                FilteredElementCollector collector3 = new FilteredElementCollector(doc);
-                collector3.OfClass(typeof(ViewFamilyType));
-                ViewFamilyType curVFT = null;
-                ViewFamilyType curRCPVFT = null;
-                //base type is Element - most generic use
-                foreach (ViewFamilyType curElem in collector3)
-                {
-                    //if don't know name
-                    if (curElem.ViewFamily == ViewFamily.FloorPlan)
-                    {
-                        curVFT = curElem;
-                    }
-                    //if do know name
-                    if (curElem.Name == "Floor Plan")
-                    {
-                        curVFT = curElem;
-                    }
-                    else if (curElem.ViewFamily == ViewFamily.CeilingPlan)
-                    {
-                        curRCPVFT = curElem;
-                    }
-                }
-
-                //Setup Titleblock type (session 02) first/any titleblock (Session 03 repeat)
-                FilteredElementCollector collector2 = new FilteredElementCollector(doc);
-                collector2.OfCategory(BuiltInCategory.OST_TitleBlocks); //get Titleblock Type Category
-                collector2.WhereElementIsElementType();  //Types of titleblock types
-
-                //FOR LEVELS
-                //processing: dataLevelList
-                int count1 = dataLevelList.Count;
-                for (int i = 1; i < count1; ++i) //i=1 skips header row
-                {
-                    Level curLevel = Level.Create(doc, dataLevelList[i].Elevation); //create level - default imperial feet
-                    curLevel.Name = dataLevelList[i].Name;
-                    int idInteger = curLevel.Id.IntegerValue;
-                    dataLevelList[i].SetIntAtIndex(idInteger, 4); //4th item in struct
-                }
-
-                //FOR SHEETS
-                //processing: dataSheetList
-                /*
-                //Got level ID in ElemID - item 4 in struct
-                //Put ElemID in Sheet List if SHEET:View Level matches LEVELS:Level Name
-                */
-                int count2 = dataSheetList.Count;
-                for (int i = 1; i < count2; ++i) //process ELNUMS
-                {
-                    for (int j = 1; j < count1; ++j) //loops through levels
-                    {
-                        if (dataSheetList[i].ViewLevel == dataLevelList[j].Name)
-                        {
-                            int ElementId = dataLevelList[j].ElemID;
-                            dataSheetList[i].SetIntAtIndex(ElementId, 8); //8th item in struct
-                        }
-                    }
-                }
-                for (int i = 1; i < count2; ++i) //i=1 skips header row
-                {
-                    //SHEETS
-                    ViewSheet curSheet = ViewSheet.Create(doc, collector2.FirstElementId()); //uses first type of titleblock kind
-                    curSheet.SheetNumber = dataSheetList[i].SheetNumber;
-                    curSheet.Name = dataSheetList[i].SheetName;
-
-
-                    //FOR VIEWS
-                    //Loop through sheet view list
-
-                    ElementId id = new ElementId(dataSheetList[i].LevelElemID);
-                    if (dataSheetList[i].SheetName.Contains("RCP"))
-                    {
-                        ViewPlan curRCP = ViewPlan.Create(doc, curRCPVFT.Id, id);
-                        curRCP.Name += "RCP"; //delete RCPs out of view level column in excel
-                        //Class call
-                        View existingView = GetViewByName(doc, dataSheetList[i].ViewLevel); //enter "level 3" abstract
-                        if (existingView != null)
-                        {
-                            Viewport newVP = Viewport.Create(doc, existingView.Id, curRCP.Id, new XYZ(0, 0, 0));
-                        }
-                        else
-                        {
-                            TaskDialog.Show("got here", "got here11"); //add more from 
-                        }
-                    }
-                    else
-                    {
-                        ViewPlan curPlan = ViewPlan.Create(doc, curVFT.Id, id);
-                        //Class call
-
-                        View existingView2 = GetViewByName(doc, dataSheetList[i].ViewLevel); //enter "level 3" abstract
-                        if (existingView2 != null)
-                        {
-                            Viewport newVP = Viewport.Create(doc, existingView2.Id, curPlan.Id, new XYZ(0, 0, 0));
-                        }
-                        else
-                        {
-                            TaskDialog.Show("got here", "got here22"); //add more from 
-                        }
-                    }
-
-                    //Set protected variables
-                    /*
-                    DrawnBy = drawnby;            //DrawnBy
-                    CheckedBy = checkedby;        //CheckedBy
-                    SheetDisc = sheetdisc;        //Discipline Header
-                    SheetSort = sheetsort;        //Sort Order
-                    */
-                    //string paramValue = "";
-                    foreach (Parameter curParam in curSheet.Parameters)
-                    {
-                        if (curParam.Definition.Name == "Drawn By")
-                        {
-                            curParam.Set(dataSheetList[i].DrawnBy);   //DrawnBy "MK"
-                            //paramValue = curParam.AsString; //returning 
-                        }
-                        if (curParam.Definition.Name == "Checked By")
-                        {
-                            curParam.Set(dataSheetList[i].CheckedBy); //Chekced by "CC"
-                            //paramValue = curParam.AsString; //returning 
-                        }
-                        if (curParam.Definition.Name == "Sheet Discipline")
-                        {
-                            curParam.Set(dataSheetList[i].SheetDisc); //
-                            //paramValue = curParam.AsString; //returning 
-                        }
-                        if (curParam.Definition.Name == "Sort Order")
-                        {
-                            curParam.Set(dataSheetList[i].SheetSort); //
-                            //paramValue = curParam.AsString; //returning 
-                        }
-
-                    }
-
-                }
-
-                t.Commit(); //Commit Transaction
-            }
-
-
-            excelWb.Close();
-            excelApp.Quit();
-
-            TaskDialog.Show("Hello", "This is my first command add-in.");
-            TaskDialog.Show("HEllo again", "This is another window");
+            TaskDialog.Show("Complete", "Created " + levelCounter.ToString() + " levels.");
+            TaskDialog.Show("Complete", "Created " + sheetCounter.ToString() + " sheets.");
 
             return Result.Succeeded;
         }
@@ -290,6 +183,46 @@ namespace RevitAddinAcademy
                 }
             }
             return null;
+        }
+
+        private ViewFamilyType GetViewFamilyType(Document doc, string type)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfClass(typeof(ViewFamilyType));
+
+            foreach (ViewFamilyType vft in collector)
+            {
+                if (vft.ViewFamily == ViewFamily.FloorPlan && type == "plan")
+                {
+                    return vft;
+                }
+                else if (vft.ViewFamily == ViewFamily.CeilingPlan && type == "rcp")
+                {
+                    return vft;
+                }
+            }
+
+            return null;
+        }
+
+        private static FilteredElementCollector GetTitleblock(Document doc)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfCategory(BuiltInCategory.OST_TitleBlocks);
+            collector.WhereElementIsElementType();
+            //ICON 30x42 - Horizontal Title Block
+            return collector;
+        }
+
+        private void SetParameterValue(ViewSheet newSheet, string paramName, string paramValue)
+        {
+            foreach (Parameter curParam in newSheet.Parameters)
+            {
+                if (curParam.Definition.Name == paramName)
+                {
+                    curParam.Set(paramValue);
+                }
+            }
         }
 
         //READ EXCEL CLASS
@@ -319,20 +252,20 @@ namespace RevitAddinAcademy
             int colCount = excelRng.Columns.Count;
             //List<int[]> indexList = new List<int[]>(); //Collection of header nums, use if out of order
 
-            for (int j = 1; j <= rowCount; j++) //loop through rows
+            for (int j = 2; j <= rowCount; j++) //loop through rows, skip header
             {
                 for (int k = 1; k <= colCount; k++) //loop through cols. last one is double, so change
                 {
                     Excel.Range cell1 = excelWs.Cells[j, k]; //Cell at first row and 1st --- 5th cell of first column, 
                     if (k == 7)
                     {
-                        double data1 = cell1.Value.ToDouble();
+                        double data1 = cell1.Value;
                         sheetData.SetDoubleAtIndex(data1, k); //Add double to struct at k
                     }
                     else
                     {
-                        string data1 = cell1.Value.ToString();
-                        sheetData.SetStringAtIndex(data1, k); //Add string to struct at k
+                        string data2 = cell1.Value.ToString();
+                        sheetData.SetStringAtIndex(data2, k); //Add string to struct at k
                     }
                 }
                 sheetData.SetIntAtIndex(0, 8);           //LevelElemID initialized to zero
@@ -363,7 +296,7 @@ namespace RevitAddinAcademy
             int rowCount = excelRng.Rows.Count;
             int colCount = excelRng.Columns.Count;
 
-            for (int j = 1; j <= rowCount; j++) //loop through rows
+            for (int j = 2; j <= rowCount; j++) //loop through rows - start at 2 to skip the header
             {
                 for (int k = 1; k <= colCount; k++) //loop through cols. First row only is string.
                 {
@@ -375,9 +308,9 @@ namespace RevitAddinAcademy
                     }
                     else
                     {
-                        Excel.Range cell1 = excelWs.Cells[j, k]; //Cell at first row and 1st --- 2nd cell of first column 
-                        double data1 = cell1.Value.ToDouble();
-                        levelData.SetDoubleAtIndex(data1, k);    //Add string to struct at k   
+                        Excel.Range cell2 = excelWs.Cells[j, k]; //Cell at first row and 1st --- 2nd cell of first column 
+                        double data2 = cell2.Value;
+                        levelData.SetDoubleAtIndex(data2, k);    //Add string to struct at k   
                     }
                 }
                 levelData.SetIntAtIndex(0, 4);           //Element ID initialized
@@ -387,7 +320,7 @@ namespace RevitAddinAcademy
             Debug.Print("Got here Levels");  //Check-in
             return structList;
         }
-        
+
         //DATA STRUCTURES
         internal struct LevelStruct  //3 in current data file, Levels is WB name
         {
@@ -395,7 +328,7 @@ namespace RevitAddinAcademy
             public string Name;
             public double Elevation;
             public double ElevationM;
-            public int    ElemID;           //Element ID
+            public int ElemID;           //Element ID
 
             //constructor method
             //method inside structure that is named the same; specify arguments inside it.
@@ -405,7 +338,6 @@ namespace RevitAddinAcademy
                 Elevation = elevation;
                 ElevationM = elevationM;
                 ElemID = elemid;
-
             }
             public void SetStringAtIndex(string passedstring, int index)    //struct method
             {
@@ -477,6 +409,16 @@ namespace RevitAddinAcademy
                 if (index == 8) { LevelElemID = passedvalue; }
                 return;
             }
+            /*
+            public string addSuffix(string passedstring, string suffx)    //struct method
+            {
+                return (passedstring + suffx);
+            }
+            public string addPrefix(string passedstring, string prefx)    //struct method
+            {
+                return (prefx + passedstring);
+            }
+            */
         }
     }
 }

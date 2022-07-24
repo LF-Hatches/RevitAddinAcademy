@@ -2,7 +2,7 @@
 <RevitAddIns>
   <AddIn Type="Command">
     <Text>Command RevitAddinAcademy</Text>
-    <Description>Some description for RevitAddinAcademy</Description>
+    <Description>Generic Description for RevitAddinAcademy</Description>
     <Assembly>RevitAddinAcademy.dll</Assembly>
     <FullClassName>RevitAddinAcademy.Command</FullClassName>
     <ClientId>fce06d8a-6988-4d90-ac44-1a29fd5bd56a</ClientId>
@@ -11,21 +11,21 @@
   </AddIn>
   <AddIn Type="Command">
 		<Text>Challenge Session 04 - Elements from Lines</Text>
-		<Description>Some description for RevitAddinAcademy</Description>
+		<Description>Create Elements from Lines</Description>
 		<Assembly>RevitAddinAcademy.dll</Assembly>
 		<FullClassName>RevitAddinAcademy.cmdElementsFromLines</FullClassName>
 		<ClientId>7C3C8F50-73A1-45DB-87ED-01F2E951583F</ClientId>
-		<VendorId>com.typepad.thebuildingcoder</VendorId>
-		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+		<VendorId>Code for MK Class Lesson 04</VendorId>
+		<VendorDescription>ArchSmarter Class</VendorDescription>
 	</AddIn>
 	<AddIn Type="Command">
 		<Text>Bonus Tool - Walls from Lines</Text>
-		<Description>Some description for RevitAddinAcademy</Description>
+		<Description>Create Elements from Lines with Dialog</Description>
 		<Assembly>RevitAddinAcademy.dll</Assembly>
 		<FullClassName>RevitAddinAcademy.cmdWallsFromLines</FullClassName>
 		<ClientId>5D964492-D61F-4885-9A2E-2D777B40C614</ClientId>
-		<VendorId>com.typepad.thebuildingcoder</VendorId>
-		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+		<VendorId>Code for MK Class Lesson 04</VendorId>
+		<VendorDescription>ArchSmarter Class</VendorDescription>
 	</AddIn>
 	<AddIn Type="Command">
 		<Text>Challenge Session 03 - Project Setup</Text>
@@ -33,15 +33,15 @@
 		<Assembly>RevitAddinAcademy.dll</Assembly>
 		<FullClassName>RevitAddinAcademy.cmdProjectSetup</FullClassName>
 		<ClientId>3788A57E-4C31-424F-971B-DD2A03DF1C0A</ClientId>
-		<VendorId>com.typepad.thebuildingcoder</VendorId>
-		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+		<VendorId>Code for MK Class Lesson 03</VendorId>
+		<VendorDescription>ArchSmarter Class</VendorDescription>
 	</AddIn>
 	<AddIn Type="Application">
     <Name>Application RevitAddinAcademy</Name>
     <Assembly>RevitAddinAcademy.dll</Assembly>
     <FullClassName>RevitAddinAcademy.App</FullClassName>
     <ClientId>f14ff0a6-d05c-430c-8d07-3160ee5d25a7</ClientId>
-    <VendorId>com.typepad.thebuildingcoder</VendorId>
-    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+    <VendorId>Code for MK Class Lesson 01</VendorId>
+    <VendorDescription>ArchSmarter Class</VendorDescription>
   </AddIn>
 </RevitAddIns>
