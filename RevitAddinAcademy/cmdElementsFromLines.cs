@@ -19,7 +19,7 @@ using Autodesk.Revit.DB.Architecture;
 namespace RevitAddinAcademy
 {
     [Transaction(TransactionMode.Manual)]
-    public class Command : IExternalCommand
+    public class cmdElementsFromLines : IExternalCommand
     {
         public Result Execute(
           ExternalCommandData commandData,
@@ -30,7 +30,6 @@ namespace RevitAddinAcademy
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
-
 
             IList<Element> pickList = uidoc.Selection.PickElementsByRectangle("Select some element");
             List<CurveElement> curveList = new List<CurveElement>();

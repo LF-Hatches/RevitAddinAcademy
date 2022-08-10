@@ -9,6 +9,15 @@
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
   </AddIn>
+	<AddIn Type="Command">
+		<Text>Command RevitAddinAcademy</Text>
+		<Description>This makes Revit elements from different line styles</Description>
+		<Assembly>RevitAddinAcademy.dll</Assembly>
+		<FullClassName>RevitAddinAcademy.cmdElementsFromLines</FullClassName>
+		<ClientId>1EF22F41-772F-434F-80D6-6E07DFF63734</ClientId>
+		<VendorId>com.typepad.thebuildingcoder</VendorId>
+		<VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+	</AddIn>
   <AddIn Type="Command">
 		<Text>Challenge Session 02</Text>
 		<Description>Some description for RevitAddinAcademy</Description>
