@@ -63,9 +63,9 @@ namespace RevitAddinAcademy.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Blue_16 {
+        internal static System.Drawing.Bitmap BC1_16 {
             get {
-                object obj = ResourceManager.GetObject("Blue_16", resourceCulture);
+                object obj = ResourceManager.GetObject("BC1_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace RevitAddinAcademy.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Blue_32 {
+        internal static System.Drawing.Bitmap BC1_32 {
             get {
-                object obj = ResourceManager.GetObject("Blue_32", resourceCulture);
+                object obj = ResourceManager.GetObject("BC1_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace RevitAddinAcademy.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Green_16 {
+        internal static System.Drawing.Bitmap BC2_16 {
             get {
-                object obj = ResourceManager.GetObject("Green_16", resourceCulture);
+                object obj = ResourceManager.GetObject("BC2_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace RevitAddinAcademy.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Green_32 {
+        internal static System.Drawing.Bitmap BC2_32 {
             get {
-                object obj = ResourceManager.GetObject("Green_32", resourceCulture);
+                object obj = ResourceManager.GetObject("BC2_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +103,9 @@ namespace RevitAddinAcademy.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Red_16 {
+        internal static System.Drawing.Bitmap BC3_16 {
             get {
-                object obj = ResourceManager.GetObject("Red_16", resourceCulture);
+                object obj = ResourceManager.GetObject("BC3_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +113,9 @@ namespace RevitAddinAcademy.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Red_32 {
+        internal static System.Drawing.Bitmap BC3_32 {
             get {
-                object obj = ResourceManager.GetObject("Red_32", resourceCulture);
+                object obj = ResourceManager.GetObject("BC3_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +123,9 @@ namespace RevitAddinAcademy.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Yellow_16 {
+        internal static System.Drawing.Bitmap BC4_16 {
             get {
-                object obj = ResourceManager.GetObject("Yellow_16", resourceCulture);
+                object obj = ResourceManager.GetObject("BC4_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +133,549 @@ namespace RevitAddinAcademy.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Yellow_32 {
+        internal static System.Drawing.Bitmap BC4_32 {
             get {
-                object obj = ResourceManager.GetObject("Yellow_32", resourceCulture);
+                object obj = ResourceManager.GetObject("BC4_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BC5_16 {
+            get {
+                object obj = ResourceManager.GetObject("BC5_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BC5_32 {
+            get {
+                object obj = ResourceManager.GetObject("BC5_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BC6_16 {
+            get {
+                object obj = ResourceManager.GetObject("BC6_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BC6_32 {
+            get {
+                object obj = ResourceManager.GetObject("BC6_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BOOKS_B_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("BOOKS_B_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BOOKS_B_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("BOOKS_B_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BOOKS_C_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("BOOKS_C_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BOOKS_C_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("BOOKS_C_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap C_IN_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("C_IN_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap C_IN_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("C_IN_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap C_OUT_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("C_OUT_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap C_OUT_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("C_OUT_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CAMPUS_IN_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("CAMPUS_IN_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CAMPUS_OUT_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("CAMPUS_OUT_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CAMPUS2_C_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("CAMPUS2_C_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap D_IN_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("D_IN_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap D_IN_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("D_IN_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap D_OUT_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("D_OUT_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap D_OUT_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("D_OUT_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB1_16 {
+            get {
+                object obj = ResourceManager.GetObject("DB1_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB1_32 {
+            get {
+                object obj = ResourceManager.GetObject("DB1_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB2_16 {
+            get {
+                object obj = ResourceManager.GetObject("DB2_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB2_32 {
+            get {
+                object obj = ResourceManager.GetObject("DB2_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB3_16 {
+            get {
+                object obj = ResourceManager.GetObject("DB3_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB3_32 {
+            get {
+                object obj = ResourceManager.GetObject("DB3_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB4_16 {
+            get {
+                object obj = ResourceManager.GetObject("DB4_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB4_32 {
+            get {
+                object obj = ResourceManager.GetObject("DB4_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB5_16 {
+            get {
+                object obj = ResourceManager.GetObject("DB5_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB5_32 {
+            get {
+                object obj = ResourceManager.GetObject("DB5_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB6_16 {
+            get {
+                object obj = ResourceManager.GetObject("DB6_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DB6_32 {
+            get {
+                object obj = ResourceManager.GetObject("DB6_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap LINKS_C_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("LINKS_C_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap LINKS_C_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("LINKS_C_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap P_IN_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("P_IN_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap P_IN_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("P_IN_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap P_OUT_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("P_OUT_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap P_OUT_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("P_OUT_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PALETTE_C_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("PALETTE_C_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB1_16 {
+            get {
+                object obj = ResourceManager.GetObject("PB1_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB1_32 {
+            get {
+                object obj = ResourceManager.GetObject("PB1_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB2_16 {
+            get {
+                object obj = ResourceManager.GetObject("PB2_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB2_32 {
+            get {
+                object obj = ResourceManager.GetObject("PB2_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB3_16 {
+            get {
+                object obj = ResourceManager.GetObject("PB3_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB3_32 {
+            get {
+                object obj = ResourceManager.GetObject("PB3_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB4_16 {
+            get {
+                object obj = ResourceManager.GetObject("PB4_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB4_32 {
+            get {
+                object obj = ResourceManager.GetObject("PB4_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB5_16 {
+            get {
+                object obj = ResourceManager.GetObject("PB5_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB5_32 {
+            get {
+                object obj = ResourceManager.GetObject("PB5_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB6_16 {
+            get {
+                object obj = ResourceManager.GetObject("PB6_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PB6_32 {
+            get {
+                object obj = ResourceManager.GetObject("PB6_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PINATA_C_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("PINATA_C_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PINATA_C_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("PINATA_C_BUTTON_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UNICORN_C_BUTTON_16 {
+            get {
+                object obj = ResourceManager.GetObject("UNICORN_C_BUTTON_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap UNICORN_C_BUTTON_32 {
+            get {
+                object obj = ResourceManager.GetObject("UNICORN_C_BUTTON_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
