@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="cmdProjectSetup.cs" />
+    <Compile Include="cmdElementsFromLines.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -79,32 +80,7 @@
     <EmbeddedResource Include="Resources\Yellow_32.png" />
     <EmbeddedResource Include="Resources\Blue_16.png" />
     <EmbeddedResource Include="Resources\Blue_32.png" />
-    <EmbeddedResource Include="Resources\BRICK_B_BUTTON_16.png" />
-    <EmbeddedResource Include="Resources\BRICK_B_BUTTON_24.png" />
-    <EmbeddedResource Include="Resources\BRICK_B_BUTTON_32.png" />
     <EmbeddedResource Include="Resources\P_OUT_BUTTON_16.png" />
-    <EmbeddedResource Include="Resources\P_OUT_BUTTON_24.png" />
-    <EmbeddedResource Include="Resources\P_OUT_BUTTON_32.png" />
-    <EmbeddedResource Include="Resources\1BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\2BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\3BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\4BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\5BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\6BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\7BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\8BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\9BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\10BUTTON_W_32.png" />
-    <EmbeddedResource Include="Resources\1BUTTON_W_16.png" />
-    <EmbeddedResource Include="Resources\2BUTTON_W_16.png" />
-    <EmbeddedResource Include="Resources\3BUTTON_W_16.png" />
-    <EmbeddedResource Include="Resources\4BUTTON_W_16.png" />
-    <EmbeddedResource Include="Resources\5BUTTON_W_16.png" />
-    <EmbeddedResource Include="Resources\6BUTTON_W_16.png" />
-    <EmbeddedResource Include="Resources\7BUTTON_W_16.png" />
-    <EmbeddedResource Include="Resources\8BUTTON_W_16.png" />
-    <EmbeddedResource Include="Resources\9BUTTON_W_16.png" />
-    <EmbeddedResource Include="Resources\10BUTTON_W_16.png" />
     <EmbeddedResource Include="Resources\BC1_32.png" />
     <EmbeddedResource Include="Resources\BC2_32.png" />
     <EmbeddedResource Include="Resources\BC3_32.png" />
@@ -122,7 +98,6 @@
     <EmbeddedResource Include="Resources\PB4_32.png" />
     <EmbeddedResource Include="Resources\PB5_32.png" />
     <EmbeddedResource Include="Resources\PB6_32.png" />
-    <EmbeddedResource Include="Resources\GB5_32.png" />
     <EmbeddedResource Include="Resources\BC1_16.png" />
     <EmbeddedResource Include="Resources\BC2_16.png" />
     <EmbeddedResource Include="Resources\BC3_16.png" />
@@ -134,7 +109,6 @@
     <EmbeddedResource Include="Resources\DB3_16.png" />
     <EmbeddedResource Include="Resources\DB4_16.png" />
     <EmbeddedResource Include="Resources\DB6_16.png" />
-    <EmbeddedResource Include="Resources\GB5_16.png" />
     <EmbeddedResource Include="Resources\PB1_16.png" />
     <EmbeddedResource Include="Resources\PB2_16.png" />
     <EmbeddedResource Include="Resources\PB3_16.png" />
